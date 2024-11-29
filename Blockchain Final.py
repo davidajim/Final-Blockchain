@@ -108,26 +108,26 @@ def full_chain():
         'length': len(blockchain.chain),
     }
     return jsonify(response), 200
-
+#gets app to run
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
+#creation of RSA public/private key pair
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA256
-
+#key generation function
 def generate_keys():
     key = RSA.generate(2048)
     private_key = key.export_key()
     public_key = key.publickey().export_key()
     return private_key, public_key
-
+#signage of transaction
 def sign_transaction(private_key, transaction):
     key = RSA.import_key(private_key)
     h = SHA256.new(transaction.encode('utf-8'))
     signature = pkcs1_15.new(key).sign(h)
     return signature
-
+#verification of transaction
 def verify_transaction(public_key, transaction, signature):
     key = RSA.import_key(public_key)
     h = SHA256.new(transaction.encode('utf-8'))
